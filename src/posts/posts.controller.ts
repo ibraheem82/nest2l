@@ -1,10 +1,36 @@
-import { Controller } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import { PostsService } from './posts.service';
+import { Post as PostInterface } from './interface/post.interface';
 
 @Controller('posts')
 export class PostsController {
-    constructor(private readonly postService: PostsService){}
+    constructor(private readonly postsService: PostsService){}
 
-    @Get('')
+    @Get()
+    findAll(@Query('search') search?: string): PostInterface[] {
+        const extraAllPosts = this.postsService.findAll();
+        /*
+
+            Get all posts:
+
+        
+        `GET /posts`
+        Response: [{id: 1, title: "Hello World"}, {id: 2, title: "NestJS Tutorial"}]
+        Search posts:
+
     
+        `GET /posts?search=nest`
+        Response: [{id: 2, title: "NestJS Tutorial"}]  // Only contains "nest"
+        */
+
+
+        if(search){
+                return extraAllPosts.filter((singlePost) => 
+                singlePost.title.toLowerCase().includes(search.toLowerCase()),
+                );
+        }
+
+        return extraAllPosts;
+    }
+
 }
