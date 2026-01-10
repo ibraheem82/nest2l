@@ -1,10 +1,10 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Param, ParseIntPipe, Query } from '@nestjs/common';
 import { PostsService } from './posts.service';
-import { Post as PostInterface } from './interface/post.interface';
+import type { Post as PostInterface } from './interface/post.interface';
 
 @Controller('posts')
 export class PostsController {
-    constructor(private readonly postsService: PostsService){}
+    constructor(private readonly postsService: PostsService) { }
 
     @Get()
     findAll(@Query('search') search?: string): PostInterface[] {
@@ -24,13 +24,18 @@ export class PostsController {
         */
 
 
-        if(search){
-                return extraAllPosts.filter((singlePost) => 
+        if (search) {
+            return extraAllPosts.filter((singlePost) =>
                 singlePost.title.toLowerCase().includes(search.toLowerCase()),
-                );
+            );
         }
 
         return extraAllPosts;
     }
+
+    @Get(':id')
+findOne(@Param('id', ParseIntPipe) id: number): PostInterface {
+    return this.postsService.findOne(id);
+}
 
 }
