@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Post } from './interface/post.interface';
+import { CreatePostDto } from './dto/create-post.dto';
 
 @Injectable()
 export class PostsService {
@@ -103,11 +104,11 @@ Result: The user can send { title: "New Title" } and nothing else, and TypeScrip
 
   */
 
-  update(id : number, updatePostData : Partial<Omit<Post, 'id' | 'createdAt'>>) : Post{
-    const currentPostIndexToEdit = this.posts.findIndex(post=> post.id === id);
+  update(id: number, updatePostData: Partial<Omit<Post, 'id' | 'createdAt'>>): Post {
+    const currentPostIndexToEdit = this.posts.findIndex(post => post.id === id);
 
-    if(currentPostIndexToEdit === -1){
-        throw new NotFoundException(`Post with ID ${id} is not found`)
+    if (currentPostIndexToEdit === -1) {
+      throw new NotFoundException(`Post with ID ${id} is not found`)
     }
 
 
@@ -120,25 +121,25 @@ Because updatePostData comes second, any keys inside it will overwrite the match
     */
 
     this.posts[currentPostIndexToEdit] = {
-        ...this.posts[currentPostIndexToEdit],
-        ...updatePostData,
-        updatedAt: new Date()
+      ...this.posts[currentPostIndexToEdit],
+      ...updatePostData,
+      updatedAt: new Date()
     }
     return this.posts[currentPostIndexToEdit];
-}
+  }
 
 
-/*
-
-
-  splice(start, deleteCount): This is a JavaScript array method that modifies the array in place (mutates it).
-
-currentPostIndexToDelete: The starting point (e.g., index 3).
-
-1: The number of items to remove.
-
-Result: The array is now one item shorter, and the gap is closed up.
-  */
+  /*
+  
+  
+    splice(start, deleteCount): This is a JavaScript array method that modifies the array in place (mutates it).
+  
+  currentPostIndexToDelete: The starting point (e.g., index 3).
+  
+  1: The number of items to remove.
+  
+  Result: The array is now one item shorter, and the gap is closed up.
+    */
 
   remove(id: number): { message: string } {
     const currentPostIndexToDelete = this.posts.findIndex(
@@ -151,5 +152,5 @@ Result: The array is now one item shorter, and the gap is closed up.
     this.posts.splice(currentPostIndexToDelete, 1);
 
     return { message: `Post with ID ${id} has been deleted` };
-}
+  }
 }
