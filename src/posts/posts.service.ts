@@ -90,4 +90,40 @@ If there are posts → finds the maximum ID and adds 1
       ? Math.max(...this.posts.map((post) => post.id)) + 1
       : 1;
   }
+
+
+  /*
+  Partial<...>: This says, "Take whatever is left, and make all fields optional."
+
+Why? A user might want to fix a typo in the title without having to re-send the entire content or authorName.
+
+Result: The user can send { title: "New Title" } and nothing else, and TypeScript will accept it.
+
+* Partial allows you to say: "I accept an object that looks like a Post, but I don't require the whole Post."
+
+  */
+
+  update(id : number, updatePostData : Partial<Omit<Post, 'id' | 'createdAt'>>) : Post{
+    const currentPostIndexToEdit = this.posts.findIndex(post=> post.id === id);
+
+    if(currentPostIndexToEdit === -1){
+        throw new NotFoundException(`Post with ID ${id} is not found`)
+    }
+
+
+    /* 
+    * First, spread (copy) all existing properties of the old post.
+
+...updatePostData: Second, spread the new properties.
+
+Because updatePostData comes second, any keys inside it will overwrite the matching keys from the old post.
+    */
+
+    this.posts[currentPostIndexToEdit] = {
+        ...this.posts[currentPostIndexToEdit],
+        ...updatePostData,
+        updatedAt: new Date()
+    }
+    return this.posts[currentPostIndexToEdit];
+}
 }
