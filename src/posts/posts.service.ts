@@ -126,4 +126,30 @@ Because updatePostData comes second, any keys inside it will overwrite the match
     }
     return this.posts[currentPostIndexToEdit];
 }
+
+
+/*
+
+
+  splice(start, deleteCount): This is a JavaScript array method that modifies the array in place (mutates it).
+
+currentPostIndexToDelete: The starting point (e.g., index 3).
+
+1: The number of items to remove.
+
+Result: The array is now one item shorter, and the gap is closed up.
+  */
+
+  remove(id: number): { message: string } {
+    const currentPostIndexToDelete = this.posts.findIndex(
+      (post) => post.id === id,
+    );
+    if (currentPostIndexToDelete === -1) {
+      throw new NotFoundException(`Post with ID ${id} is not found`);
+    }
+
+    this.posts.splice(currentPostIndexToDelete, 1);
+
+    return { message: `Post with ID ${id} has been deleted` };
+}
 }
