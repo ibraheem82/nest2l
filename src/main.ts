@@ -4,6 +4,8 @@ import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  
   app.useGlobalPipes(
     new ValidationPipe({
       //*  If your DTO expects email and password, but the user sends email, password, and hack, this setting silently deletes hack.
@@ -13,6 +15,8 @@ async function bootstrap() {
       disableErrorMessages: false   // Set to false during development to see what is wrong
     })
   );
+
+  
 
   await app.listen(process.env.PORT ?? 3000);
 }
